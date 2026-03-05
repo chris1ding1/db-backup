@@ -1,0 +1,21 @@
+# IDE
+/.idea
+/.vscode
+
+# Python
+__pycache__/
+.ruff_cache/
+
+# Secrets and credentials
+.env
+.env.*
+!.env.example
+
+# Tmp
+*.swp
+*.swo
+.DS_Store
+
+# Virtual environments.
+venv
+.venv
