@@ -3,5 +3,6 @@
   "editor.tabSize": 4,
   "files.trimTrailingWhitespace": true,
   "files.insertFinalNewline": true,
-  "files.trimFinalNewlines": true
+  "files.trimFinalNewlines": true,
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python"
 }
