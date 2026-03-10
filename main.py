@@ -4,6 +4,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 import boto3
+from boto3.exceptions import S3UploadFailedError
 from botocore.exceptions import ClientError
 
 from config import (
@@ -55,6 +56,8 @@ def upload_to_s3(s3_config: dict, file_name: str, object_name: str) -> bool:
     try:
         client.upload_file(file_name, s3_config["bucket"], object_name)
     except ClientError:
+        return False
+    except S3UploadFailedError:
         return False
     return True
 
