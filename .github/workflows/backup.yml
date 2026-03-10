@@ -1,0 +1,53 @@
+name: Database Backup
+
+on:
+  schedule:
+    - cron: '0 1 1 * *'
+  workflow_dispatch:
+
+jobs:
+  backup:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+          cache-dependency-glob: |
+            **/pyproject.toml
+            **/uv.lock
+          restore-cache: "true"
+          save-cache: "true"
+          cache-python: "true"
+
+      - name: Install dependencies
+        run: uv sync --locked --no-dev
+
+      - name: Set environment variable
+        run: |
+          cp .env.example .env
+          sed -i "s|^PGSQL_HOST=\$|POSTGRES_HOST=${{ secrets.PGSQL_HOST }}|" .env
+          sed -i "s|^PGSQL_PORT=\$|POSTGRES_PORT=${{ secrets.PGSQL_PORT }}|" .env
+          sed -i "s|^PGSQL_USER=\$|POSTGRES_DB=${{ secrets.PGSQL_USER }}|" .env
+          sed -i "s|^PGSQL_PASSWORD=\$|POSTGRES_USER=${{ secrets.PGSQL_PASSWORD }}|" .env
+
+      - name: Install MySQL client
+        run: |
+          curl -fsSL https://repo.mysql.com/RPM-GPG-KEY-mysql-2023 | sudo gpg --dearmor -o /usr/share/keyrings/mysql.gpg
+          echo "deb [signed-by=/usr/share/keyrings/mysql.gpg] http://repo.mysql.com/apt/ubuntu $(lsb_release -cs) mysql-9.0" | sudo tee /etc/apt/sources.list.d/mysql.list
+          sudo apt-get update
+          sudo apt-get install -y mysql-client
+
+      - name: Install PostgreSQL client
+        run: |
+          curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo gpg --dearmor -o /usr/share/keyrings/pgdg.gpg
+          echo "deb [signed-by=/usr/share/keyrings/pgdg.gpg] http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client-18
+
+      - name: Run backup
+        run: uv run python main.py
