@@ -57,15 +57,15 @@ jobs:
         run: |
           curl -fsSL https://repo.mysql.com/RPM-GPG-KEY-mysql-2025 | sudo gpg --dearmor -o /usr/share/keyrings/mysql-archive-keyring.gpg
           echo "deb [signed-by=/usr/share/keyrings/mysql-archive-keyring.gpg] http://repo.mysql.com/apt/ubuntu/ jammy mysql-innovation" | sudo tee /etc/apt/sources.list.d/mysql.list
-          sudo apt update
+          sudo apt-get update
           sudo apt-get install -y mysql-client
 
       - name: Install PostgreSQL client
         run: |
-          sudo apt install -y postgresql-common
+          sudo apt-get install -y postgresql-common
           sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y
-          sudo apt update
-          sudo apt install -y postgresql-client-18
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client-18
 
       - name: Run backup
         run: uv run python main.py
