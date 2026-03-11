@@ -46,15 +46,32 @@ def build_db_password_env(db_conn: dict) -> dict[str, str]:
     return env
 
 
-def upload_to_s3(s3_config: dict, file_name: str, object_name: str) -> bool:
+def upload_to_r2(config_info: dict, file_name: str, object_name: str) -> bool:
     client = boto3.client(
         "s3",
-        region_name=s3_config["region"],
-        aws_access_key_id=s3_config["key"],
-        aws_secret_access_key=s3_config["secret"],
+        endpoint_url=config_info["endpoint"],
+        aws_access_key_id=config_info["key"],
+        aws_secret_access_key=config_info["secret"],
+        region_name="auto",
     )
     try:
-        client.upload_file(file_name, s3_config["bucket"], object_name)
+        client.upload_file(file_name, config_info["bucket"], object_name)
+    except ClientError:
+        return False
+    except S3UploadFailedError:
+        return False
+    return True
+
+
+def upload_to_s3(config_info: dict, file_name: str, object_name: str) -> bool:
+    client = boto3.client(
+        "s3",
+        region_name=config_info["region"],
+        aws_access_key_id=config_info["key"],
+        aws_secret_access_key=config_info["secret"],
+    )
+    try:
+        client.upload_file(file_name, config_info["bucket"], object_name)
     except ClientError:
         return False
     except S3UploadFailedError:
@@ -89,11 +106,13 @@ def run_backup(task: dict) -> None:
     except Exception:
         return
 
-    if STORAGE["remote"]["default"]:
-        disk_name = STORAGE["remote"]["default"]
+    for disk_name in STORAGE["remote"]["default"]:
         disk = STORAGE["remote"]["disks"].get(disk_name)
-        if disk and disk["driver"] == StorageDriver.S3:
-            upload_to_s3(disk, full_local_file, save_file)
+        if disk:
+            if disk["driver"] == StorageDriver.S3:
+                upload_to_s3(disk, full_local_file, save_file)
+            elif disk["driver"] == StorageDriver.R2:
+                upload_to_s3(disk, full_local_file, save_file)
 
 
 def main() -> None:
