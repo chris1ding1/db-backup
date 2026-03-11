@@ -55,8 +55,8 @@ jobs:
 
       - name: Install MySQL client
         run: |
-          sudo apt-key adv --keyserver pgp.mit.edu --recv-keys A8D3785C
-          echo "deb http://repo.mysql.com/apt/ubuntu/ jammy mysql-innovation" | sudo tee /etc/apt/sources.list.d/mysql.list
+          curl -fsSL https://repo.mysql.com/RPM-GPG-KEY-mysql-2025 | sudo gpg --dearmor -o /usr/share/keyrings/mysql-archive-keyring.gpg
+          echo "deb [signed-by=/usr/share/keyrings/mysql-archive-keyring.gpg] http://repo.mysql.com/apt/ubuntu/ jammy mysql-innovation" | sudo tee /etc/apt/sources.list.d/mysql.list
           sudo apt update
           sudo apt-get install -y mysql-client
 
