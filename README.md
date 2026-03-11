@@ -62,4 +62,4 @@ Backup files are saved locally to `backup/` and optionally uploaded to remote st
 
 ## GitHub Actions
 
-The included workflow runs backups on a monthly schedule. Configure your credentials via repository secrets and variables.
+A workflow example is provided at `.github/workflows/backup.yml.example`. To enable it, rename the file to `backup.yml` and configure your credentials via repository secrets and variables. It runs backups on a monthly schedule by default.
