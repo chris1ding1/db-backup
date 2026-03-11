@@ -39,13 +39,14 @@ DATABASE_CONNECTIONS: dict[str, dict] = {
     },
 }
 
-BACKUP_TASKS: list[dict] = [
+DATABASE_CONNECTIONS: dict[str, dict] = {
     {
         "db_connection": "mysql-1",       # Connection name defined in DATABASE_CONNECTIONS
         "dump_command": "mysqldump my_database",
         "result_filename": "production.my_database",
         "save_path": "my_database",     # Subdirectory under backup/
     },
+    # ...
 ]
 ```
 
