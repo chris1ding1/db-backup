@@ -112,7 +112,7 @@ def run_backup(task: dict) -> None:
             if disk["driver"] == StorageDriver.S3:
                 upload_to_s3(disk, full_local_file, save_file)
             elif disk["driver"] == StorageDriver.R2:
-                upload_to_s3(disk, full_local_file, save_file)
+                upload_to_r2(disk, full_local_file, save_file)
 
 
 def main() -> None:
