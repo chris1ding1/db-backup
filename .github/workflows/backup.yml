@@ -30,6 +30,7 @@ jobs:
       - name: Set environment variable
         run: |
           cp .env.example .env
+
           sed -i "s|^PGSQL_HOST=\$|POSTGRES_HOST=${{ secrets.PGSQL_HOST }}|" .env
           sed -i "s|^PGSQL_PORT=\$|POSTGRES_PORT=${{ secrets.PGSQL_PORT }}|" .env
           sed -i "s|^PGSQL_USER=\$|POSTGRES_DB=${{ secrets.PGSQL_USER }}|" .env
@@ -37,17 +38,17 @@ jobs:
 
       - name: Install MySQL client
         run: |
-          curl -fsSL https://repo.mysql.com/RPM-GPG-KEY-mysql-2023 | sudo gpg --dearmor -o /usr/share/keyrings/mysql.gpg
-          echo "deb [signed-by=/usr/share/keyrings/mysql.gpg] http://repo.mysql.com/apt/ubuntu $(lsb_release -cs) mysql-9.0" | sudo tee /etc/apt/sources.list.d/mysql.list
-          sudo apt-get update
+          sudo apt-key adv --keyserver pgp.mit.edu --recv-keys A8D3785C
+          echo "deb http://repo.mysql.com/apt/ubuntu/ jammy mysql-innovation" | sudo tee /etc/apt/sources.list.d/mysql.list
+          sudo apt update
           sudo apt-get install -y mysql-client
 
       - name: Install PostgreSQL client
         run: |
-          curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo gpg --dearmor -o /usr/share/keyrings/pgdg.gpg
-          echo "deb [signed-by=/usr/share/keyrings/pgdg.gpg] http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
-          sudo apt-get update
-          sudo apt-get install -y postgresql-client-18
+          sudo apt install -y postgresql-common
+          sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y
+          sudo apt update
+          sudo apt install -y postgresql-client-18
 
       - name: Run backup
         run: uv run python main.py
