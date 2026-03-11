@@ -65,4 +65,4 @@ STORAGE: dict[str, Any] = {
     },
 }
 
-BACKUP_TASKS: list[str, dict] = []
+BACKUP_TASKS: list[dict] = []

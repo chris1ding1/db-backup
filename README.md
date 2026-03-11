@@ -39,7 +39,7 @@ DATABASE_CONNECTIONS: dict[str, dict] = {
     },
 }
 
-DATABASE_CONNECTIONS: dict[str, dict] = {
+BACKUP_TASKS: dict[dict] = [
     {
         "db_connection": "mysql-1",       # Connection name defined in DATABASE_CONNECTIONS
         "dump_command": "mysqldump my_database",
