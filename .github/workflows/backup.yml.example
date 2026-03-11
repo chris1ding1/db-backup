@@ -44,14 +44,14 @@ jobs:
           sed -i "s|^CLOUDFLARE_SECRET_ACCESS_KEY=\$|CLOUDFLARE_SECRET_ACCESS_KEY=${{ secrets.CLOUDFLARE_SECRET_ACCESS_KEY }}|" .env
 
           sed -i "s|^MYSQL_HOST=\$|MYSQL_HOST=${{ vars.MYSQL_HOST }}|" .env
-          sed -i "s|^MYSQL_PORT=\$|PGSQL_PORT=${{ vars.MYSQL_PORT }}|" .env
-          sed -i "s|^MYSQL_USER=\$|PGSQL_USER=${{ vars.MYSQL_USER }}|" .env
-          sed -i "s|^MYSQL_PASSWORD=\$|POSTGRES_USER=${{ secrets.MYSQL_PASSWORD }}|" .env
+          sed -i "s|^MYSQL_PORT=\$|MYSQL_PORT=${{ vars.MYSQL_PORT }}|" .env
+          sed -i "s|^MYSQL_USER=\$|MYSQL_USER=${{ vars.MYSQL_USER }}|" .env
+          sed -i "s|^MYSQL_PASSWORD=\$|MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}|" .env
 
           sed -i "s|^PGSQL_HOST=\$|PGSQL_HOST=${{ vars.PGSQL_HOST }}|" .env
           sed -i "s|^PGSQL_PORT=\$|PGSQL_PORT=${{ vars.PGSQL_PORT }}|" .env
           sed -i "s|^PGSQL_USER=\$|PGSQL_USER=${{ vars.PGSQL_USER }}|" .env
-          sed -i "s|^PGSQL_PASSWORD=\$|POSTGRES_USER=${{ secrets.PGSQL_PASSWORD }}|" .env
+          sed -i "s|^PGSQL_PASSWORD=\$|PGSQL_PASSWORD=${{ secrets.PGSQL_PASSWORD }}|" .env
 
       - name: Install MySQL client
         run: |
